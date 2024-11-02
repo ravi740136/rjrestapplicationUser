@@ -81,6 +81,35 @@ public class UserControllerTest {
             .body("name", equalTo("John Doe"))
             .body("email", equalTo("john@example.com"));
     }
+    
+ // Test case for retrieving a user by path parameter ID
+    @Test
+    public void testGetUserByPathParameter() {
+        // First, create a user to retrieve by ID
+        String userJson = "{\"name\":\"John Doe\", \"email\":\"john@example.com\"}";
+
+        int userId = given()
+            .spec(requestSpec)
+            .body(userJson)
+            .when()
+            .post()
+            .then()
+            .statusCode(201)
+            .extract()
+            .path("id");
+
+        // Use path parameter to retrieve the user by ID
+        given()
+            .spec(requestSpec)
+            .pathParam("id", userId)
+        .when()
+            .get("/{id}")
+        .then()
+            .statusCode(200)
+            .body("name", equalTo("John Doe"))
+            .body("email", equalTo("john@example.com"));
+    }
+
 
 
     // Test case for updating a user
